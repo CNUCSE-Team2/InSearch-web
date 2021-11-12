@@ -1,4 +1,5 @@
 from logging import error
+from django.http import response
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -7,12 +8,14 @@ from .Insearch import *
 from http import HTTPStatus
 
 from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.utils import no_body, swagger_auto_schema
 
 from rest_framework.decorators import api_view
 
+from .response_schema import *
+
 class Content(APIView):
-    @swagger_auto_schema()
+    @swagger_auto_schema(responses=content_get_response)
     def get(self, request, *args, **kwargs):
         """
             메인화면 -> contents list 보여줌
@@ -26,12 +29,12 @@ class Content(APIView):
             [                
                 - id : int
                 - title : string
-                - content : string
+                - description : string
             ]
             
         """
         error_data = {}
-    @swagger_auto_schema()
+    @swagger_auto_schema(request_body=DocumentNoIdSerializer)
     def put(self, request, *args, **kwargs):
         """
             Content 추가
@@ -48,7 +51,7 @@ class Content(APIView):
         error_data = {}
 
 class ContentDetail(APIView):
-    @swagger_auto_schema()
+    @swagger_auto_schema(responses=contentDetail_get_response)
     def get(self, request, *args, **kwargs):
         """
             content 상세보기 페이지
@@ -64,7 +67,7 @@ class ContentDetail(APIView):
                 
         """
         error_data = {}
-    @swagger_auto_schema()
+    @swagger_auto_schema(request_body=DocumentNoIdSerializer, responses=contentDetail_post_response)
     def post(self, request, *args, **kwargs):
         """
             content 업데이트
@@ -84,7 +87,7 @@ class ContentDetail(APIView):
         """
 
         error_data = {}
-    @swagger_auto_schema()    
+    @swagger_auto_schema(request_body=no_body)    
     def delete(self, request, *args, **kwargs):
         """
             Content 삭제
@@ -97,8 +100,8 @@ class ContentDetail(APIView):
         """
         error_data = {}
 
-@swagger_auto_schema(method="get")
-@api_view(['GET'])
+@swagger_auto_schema(method="POST",request_body=QuerySerializer,responses=search_response)
+@api_view(['POST'])
 def search(request):
     #search
     """
@@ -108,7 +111,7 @@ def search(request):
         ### Method : GET
         ## URL : search
         ## Request
-        - search : "String"
+        - query : "String"
         ## Response
         [
             - id : int
@@ -118,7 +121,7 @@ def search(request):
           
     """
 
-@swagger_auto_schema(method="get")
+@swagger_auto_schema(method="get",responses=admin_response)
 @api_view(['GET'])
 def adminPage(request):
     #admin

@@ -3,4 +3,7 @@ from .views import *
 
 app_name = "Insearch_Web"
 
-urlpatterns = []
+urlpatterns = [
+    path('contents', contentList),
+    path('search', search),
+]

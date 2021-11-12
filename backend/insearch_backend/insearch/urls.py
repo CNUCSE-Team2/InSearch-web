@@ -4,6 +4,9 @@ from .views import *
 app_name = "Insearch_Web"
 
 urlpatterns = [
-    path('contents', contentList),
+    path('contents', Content.as_view()),
+    path('contents/<int:id>', ContentDetail.as_view()),
     path('search', search),
+    path('admin', adminPage),
+    
 ]

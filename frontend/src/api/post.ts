@@ -31,7 +31,7 @@ export const getPostsAPI = async () => {
       method: 'GET',
       url: `/contents`,
     });
-    return posts as unknown as SummarizedPostType[];
+    return posts.data.document as unknown as SummarizedPostType[];
   } catch (error) {
     alert('error');
     return false;

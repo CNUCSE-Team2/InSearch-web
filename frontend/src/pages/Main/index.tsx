@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import * as Style from './styled';
+import { startClub, stopClub } from '../../utils/club';
 
 interface SummarizedPostType {
   id: string;
@@ -13,7 +14,17 @@ interface MainProps {
 }
 
 function Main({ postList, clickPost, handleSearch }: MainProps) {
+  const [club, setClub] = useState(false);
   const [text, setText] = useState('');
+
+  const clubHandler = () => {
+    setClub(!club);
+    if (club) {
+      stopClub();
+    } else {
+      startClub();
+    }
+  };
 
   return (
     <Style.Container>
@@ -28,6 +39,9 @@ function Main({ postList, clickPost, handleSearch }: MainProps) {
           </Style.PostItem>
         ))}
       </Style.PostList>
+      <Style.Club onClick={clubHandler} isClub={club}>
+        Club
+      </Style.Club>
     </Style.Container>
   );
 }

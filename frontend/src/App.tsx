@@ -33,15 +33,15 @@ function App() {
     }
   };
 
-  const createPost = async (title: string, content: string) => {
-    const result = await createPostAPI({ title, content });
+  const createPost = async (title: string, description: string) => {
+    const result = await createPostAPI({ title, description });
     if (result) {
       setTab('list');
     }
   };
 
-  const updatePost = async (id: string, title: string, content: string) => {
-    const result = await updatePostAPI({ id, title, content });
+  const updatePost = async (id: string, title: string, description: string) => {
+    const result = await updatePostAPI({ id, title, description });
     if (result) {
       setTab('list');
     }
@@ -56,8 +56,9 @@ function App() {
 
   const renderingComponent = () => {
     if (tab === 'list') return <MainPage postList={postList} clickPost={clickPost} handleSearch={handleSearch} />;
-    else if (tab === 'post')
+    if (tab === 'post') {
       return <PostPage post={selectedPost} createPost={createPost} deletePost={deletePost} updatePost={updatePost} />;
+    }
     return <></>;
   };
 
@@ -69,7 +70,7 @@ function App() {
   };
 
   useEffect(() => {
-    // getPost();
+    getPost();
   }, [tab]);
 
   return (

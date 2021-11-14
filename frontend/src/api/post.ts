@@ -12,13 +12,13 @@ interface SearchPostRequest {
 
 interface CreatePostRequest {
   title: string;
-  content: string;
+  description: string;
 }
 
 interface UpdatePostRequest {
   id: string;
   title: string;
-  content: string;
+  description: string;
 }
 
 interface DeletePostRequest {
@@ -29,7 +29,7 @@ export const getPostsAPI = async () => {
   try {
     const posts = await axios({
       method: 'GET',
-      url: `/`,
+      url: `/contents`,
     });
     return posts as unknown as SummarizedPostType[];
   } catch (error) {
@@ -42,7 +42,7 @@ export const getPostAPI = async ({ id }: GetPostRequest) => {
   try {
     const post = await axios({
       method: 'GET',
-      url: `/`,
+      url: `/contents/${id}`,
     });
     return post as unknown as PostType;
   } catch (error) {
@@ -54,8 +54,11 @@ export const getPostAPI = async ({ id }: GetPostRequest) => {
 export const searchPostAPI = async ({ query }: SearchPostRequest) => {
   try {
     const posts = await axios({
-      method: 'GET',
-      url: `/`,
+      method: 'POST',
+      url: `/search`,
+      data: {
+        query,
+      },
     });
     return posts as unknown as SummarizedPostType[];
   } catch (error) {
@@ -64,14 +67,14 @@ export const searchPostAPI = async ({ query }: SearchPostRequest) => {
   }
 };
 
-export const createPostAPI = async ({ title, content }: CreatePostRequest) => {
+export const createPostAPI = async ({ title, description }: CreatePostRequest) => {
   try {
     await axios({
       method: 'POST',
-      url: `/`,
+      url: `/contents`,
       data: {
         title,
-        content,
+        description,
       },
     });
     return true;
@@ -81,14 +84,14 @@ export const createPostAPI = async ({ title, content }: CreatePostRequest) => {
   }
 };
 
-export const updatePostAPI = async ({ id, title, content }: UpdatePostRequest) => {
+export const updatePostAPI = async ({ id, title, description }: UpdatePostRequest) => {
   try {
     await axios({
       method: 'PUT',
-      url: `/`,
+      url: `/contents/${id}`,
       data: {
         title,
-        content,
+        description,
       },
     });
     return true;
@@ -102,7 +105,7 @@ export const deletePostAPI = async ({ id }: DeletePostRequest) => {
   try {
     await axios({
       method: 'DELETE',
-      url: `/`,
+      url: `/contents/${id}`,
     });
     return true;
   } catch (error) {

@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
 
+interface ClubProps {
+  isClub: boolean;
+}
+
 export const Container = styled.div`
   margin: 0 auto;
   width: 800px;
@@ -50,4 +54,17 @@ export const ControlButton = styled.button``;
 
 export const PostTitle = styled.h2`
   font-size: 3rem;
+`;
+
+export const Club = styled.button<ClubProps>`
+  position: absolute;
+  left: 3rem;
+  bottom: 3rem;
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  background-color: ${(props) => (props.isClub ? 'black' : 'red')};
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
 `;

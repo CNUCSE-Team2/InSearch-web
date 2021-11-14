@@ -87,19 +87,15 @@ admin_response = {
         description="Success",
         schema=TableSerializer,
         examples={
-            "application/json" : {
-                "table":[
+            "application/json" : 
+                [
                     {
-                        "token" : "검색어",
-                        "title" : "1,3,4,5",
-
-                    },
-                    {
-                        "token" : "장고",
-                        "title" : "8,9,10",
+                        "token": "문정현",
+                        "document_id_list": {
+                        "1": 1
+                        }
                     }
                 ]
-            }
         }
     )
 }

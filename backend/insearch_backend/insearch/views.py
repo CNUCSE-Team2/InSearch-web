@@ -1,3 +1,4 @@
+import json
 from logging import error
 from typing import OrderedDict
 from django.http import response
@@ -13,6 +14,8 @@ from drf_yasg.utils import no_body, swagger_auto_schema
 from rest_framework.decorators import api_view
 
 from .response_schema import *
+
+isc = InSearch()
 
 class Content(APIView):
     @swagger_auto_schema(responses=content_get_response)
@@ -44,18 +47,17 @@ class Content(APIView):
             document_response.append(document_json)
         
         response["document"] = document_response
-        
-
+       
         return JsonResponse(response, safe=False)
 
 
-    @swagger_auto_schema(request_body=DocumentNoIdSerializer)
+    @swagger_auto_schema(request_body=DocumentSerializer)
     def post(self, request, *args, **kwargs):
         """
             Content 추가
 
             ---
-            ## Method : PUT
+            ## Method : POST
             ## URL : contents
             ## Request
             - title : string
@@ -63,7 +65,14 @@ class Content(APIView):
             ## Response
 
         """
-        error_data = {}
+        document = Document()
+        document.title = request.data.get("title")
+        document.description = request.data.get("description")
+        
+        isc.add_document(document.id, document.title+document.description)
+
+        response = DocumentSerializer(document).data
+        return JsonResponse(response, safe=False)
 
 class ContentDetail(APIView):
     @swagger_auto_schema(responses=contentDetail_get_response)
@@ -88,7 +97,7 @@ class ContentDetail(APIView):
             content 업데이트
 
             ---
-            ## Method : POST
+            ## Method : PUT
             ## URL : contents
             ## Request
             ### Document
@@ -153,4 +162,17 @@ def adminPage(request):
             -document_id_list : string
         ]
     """
-    error_data = {}
+    result = isc.add_document(1, "문정현")
+    print(result)
+    table_result = isc.return_table()
+    table_keys = table_result.keys()
+    print(table_result)
+
+    response = []
+    for key in table_keys:
+        table_dict = OrderedDict()
+        table_dict["token"] = key
+        table_dict["document_id_list"] = table_result[key]
+        response.append(table_dict)
+
+    return JsonResponse(response, safe=False)

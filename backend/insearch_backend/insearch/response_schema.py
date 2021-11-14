@@ -4,20 +4,17 @@ from .serializers import *
 content_get_response = {
     "200" : openapi.Response(
         description="Success",
-        schema=DocumentSerializer,
+        schema=DocumentNoIdSerializer,
         examples={
             "application/json": {
-                "document":[
+                "document": [
                     {
-                        "id" : 1,
-                        "title" : "This is TITLE",
-                        "descripton" : "This is description"
-
+                    "id": 1,
+                    "title": "This is TITLE",
                     },
                     {
-                        "id" : 2,
-                        "title" : "이건 타이틀입니다!",
-                        "descripton" : "이건 컨텐츠입니다!"
+                    "id": 2,
+                    "title": "이건 타이틀입니다!",
                     }
                 ]
             }

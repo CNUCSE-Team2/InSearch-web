@@ -1,12 +1,12 @@
 from logging import error
+from typing import OrderedDict
 from django.http import response
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
-from .Insearch import *
 from http import HTTPStatus
-
+from InSearchLibrary.InSearch import *
 from drf_yasg import openapi
 from drf_yasg.utils import no_body, swagger_auto_schema
 
@@ -29,13 +29,28 @@ class Content(APIView):
             [                
                 - id : int
                 - title : string
-                - description : string
             ]
             
         """
-        error_data = {}
+        documentsList = Document.objects.all()
+        
+        response = OrderedDict()
+        document_response = []
+        for document in documentsList:
+            document_json = OrderedDict()
+            document_data = DocumentSerializer(document).data
+            document_json["id"] = document_data["id"]
+            document_json["title"] = document_data["title"]
+            document_response.append(document_json)
+        
+        response["document"] = document_response
+        
+
+        return JsonResponse(response, safe=False)
+
+
     @swagger_auto_schema(request_body=DocumentNoIdSerializer)
-    def put(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         """
             Content 추가
 
@@ -63,12 +78,12 @@ class ContentDetail(APIView):
             ## Response
             - id : int
             - title : string
-            - content : string
+            - description : string
                 
         """
         error_data = {}
     @swagger_auto_schema(request_body=DocumentNoIdSerializer, responses=contentDetail_post_response)
-    def post(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         """
             content 업데이트
 

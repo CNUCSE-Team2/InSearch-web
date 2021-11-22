@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 from http import HTTPStatus
-from InSearchLibrary.InSearch import *
+import InSearch as IS
 from drf_yasg import openapi
 from drf_yasg.utils import no_body, swagger_auto_schema
 
@@ -16,7 +16,7 @@ from rest_framework.decorators import api_view
 
 from .response_schema import *
 
-isc = InSearch()
+isc = IS.InSearch()
 
 class Content(APIView):
     @swagger_auto_schema(responses=content_get_response)
@@ -71,7 +71,7 @@ class Content(APIView):
         document.description = request.data.get("description")
         document.save()
         
-        isc.add_document(document.id, document.title+document.description)
+        isc.add_document(document.id, document.title + " " + document.description)
 
         response = DocumentSerializer(document).data
 
@@ -129,7 +129,7 @@ class ContentDetail(APIView):
         document.description = new_description
         document.save()
 
-        isc.update_document(id,new_title+new_description)
+        isc.update_document(id,new_title + " " + new_description)
 
         return JsonResponse(DocumentSerializer(document).data,safe=False)
 
@@ -206,10 +206,8 @@ class Admin(APIView):
                 -document_id_list : string
             ]
         """
-        isc.add_document(1, "문정현")
         table_result = isc.return_table()
         table_keys = table_result.keys()
-        print(table_result)
 
         response = []
         for key in table_keys:
@@ -236,13 +234,10 @@ class Admin(APIView):
                 -document_id_list : string
             ]
         """
-        isc.add_document(1, "문정현")
         table_result = isc.return_table()
         table_keys = table_result.keys()
-        print(table_result)
 
         isc.delete_all()
-        print(isc.return_table())
 
         response = []
         for key in isc.return_table().keys():
